@@ -1,27 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'realm-android'
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath "io.realm:realm-gradle-plugin:5.11.0"
-    }
-}
-
-realm {
-    syncEnabled = true;
-}
 android {
-    compileSdkVersion 28
+    compileSdkVersion 30
     defaultConfig {
         applicationId "com.globant.myapplication"
         minSdkVersion 17
-        targetSdkVersion 28
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -31,6 +17,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    buildFeatures {
+        viewBinding true
     }
 }
 
@@ -42,6 +31,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':domain')
     implementation project(path: ':di')
+    implementation project(path: ':data')
 
     def lib = rootProject.ext.generalDependencies
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -51,7 +41,6 @@ dependencies {
     implementation lib.appcompat
     implementation lib.coreKtx
     implementation lib.constraintlayout
-    implementation lib.viewmodel
 
     testImplementation lib.junit_version
     androidTestImplementation lib.test_runner_version
@@ -59,7 +48,6 @@ dependencies {
 
     testImplementation lib.google_truth_version
     testImplementation lib.mockito_core_version
-    testImplementation lib.koin_test
 
     testImplementation lib.coreTest
     testImplementation lib.coroutinesCore
