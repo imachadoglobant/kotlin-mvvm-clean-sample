@@ -1,9 +1,8 @@
-package com.globant.data.database.response
+package com.globant.data.service.response
 
-import com.globant.data.service.response.CharacterResponse
 import com.google.gson.annotations.SerializedName
 
-class DataBaseResponse<T>(
+class DataResponse<T>(
         @SerializedName("results") val characters: List<CharacterResponse>,
         val offset: Int,
         val limit: Int,

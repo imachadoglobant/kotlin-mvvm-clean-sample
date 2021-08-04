@@ -1,28 +1,36 @@
 package com.globant.data.database
 
-import com.globant.data.database.entity.MarvelCharacterRealm
-import com.globant.data.mapper.CharacterMapperLocal
-import com.globant.domain.entities.MarvelCharacter
-import com.globant.domain.utils.Result
-import io.realm.Realm
+import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import com.globant.data.database.dao.CharacterDao
+import com.globant.data.database.entity.MarvelCharacterRoom
 
-class CharacterDatabase {
+@Database(entities = [MarvelCharacterRoom::class], version = 1)
+abstract class CharacterDatabase : RoomDatabase() {
 
-    fun getCharacterById(id: Int): Result<MarvelCharacter> {
-        val mapper = CharacterMapperLocal()
-        Realm.getDefaultInstance().use {
-            val character = it.where(MarvelCharacterRealm::class.java).equalTo("id", id).findFirst()
-            character?.let { return Result.Success(mapper.transform(character)) }
-            return Result.Failure(Exception("Character not found"))
-        }
-    }
+    companion object {
 
-    fun insertOrUpdateCharacter(character: MarvelCharacter) {
-        val mapperLocal = CharacterMapperLocal()
-        Realm.getDefaultInstance().use {
-            it.executeTransaction { realm ->
-                realm.insertOrUpdate(mapperLocal.transformToRepository(character))
+        private const val DATABASE_NAME = "character_database"
+        private lateinit var instance: CharacterDatabase
+
+        @Synchronized
+        fun getInstance(context: Context): CharacterDatabase {
+            if (!this::instance.isInitialized) {
+                instance = Room.databaseBuilder(
+                        context.applicationContext,
+                        CharacterDatabase::class.java,
+                        DATABASE_NAME
+                )
+                        .fallbackToDestructiveMigration()
+                        .build()
             }
+            return instance
         }
+
     }
+
+    abstract fun characterDao(): CharacterDao
+
 }

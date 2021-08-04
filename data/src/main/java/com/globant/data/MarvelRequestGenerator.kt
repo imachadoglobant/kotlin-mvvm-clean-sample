@@ -1,8 +1,8 @@
 package com.globant.data
 
+import android.content.Context
 import android.util.Log
 import com.chuckerteam.chucker.api.ChuckerInterceptor
-import io.realm.internal.SyncObjectServerFacade.getApplicationContext
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -18,9 +18,7 @@ private const val TS_VALUE = "1"
 private const val MAX_TRYOUTS = 3
 private const val INIT_TRYOUT = 1
 
-class MarvelRequestGenerator {
-
-    val context = getApplicationContext()
+class MarvelRequestGenerator(context: Context) {
 
     private val httpClient = OkHttpClient.Builder()
             .addInterceptor(

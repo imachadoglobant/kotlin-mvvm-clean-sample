@@ -17,6 +17,7 @@ ext{
     mockito_core_version = "2.28.2"
     junit_version = "4.13"
     androidx_viewmodel = "2.2.0"
+    room_version = "2.3.0"
 
 generalDependencies = [
         appcompat                       : "androidx.appcompat:appcompat:${appcompat}",
@@ -36,6 +37,8 @@ generalDependencies = [
         chuckerReleaseImplementation    : "com.github.ChuckerTeam.Chucker:library-no-op:${chuckerVersion}",
         retrofit2                       : "com.squareup.retrofit2:retrofit:${retrofit2}",
         retrofitComverterGson           : "com.squareup.retrofit2:converter-gson:${retrofitComverterGson}",
-        okhttp3LoggingInterceptor       : "com.squareup.okhttp3:logging-interceptor:${okhttp3LoggingInterceptor}"
+        okhttp3LoggingInterceptor       : "com.squareup.okhttp3:logging-interceptor:${okhttp3LoggingInterceptor}",
+        room                            : "androidx.room:room-runtime:${room_version}",
+        room_compiler                   : "androidx.room:room-compiler:${room_version}"
 ]
 }

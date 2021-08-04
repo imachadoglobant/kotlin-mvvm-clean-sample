@@ -1,20 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'realm-android'
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "io.realm:realm-gradle-plugin:10.4.0"
-    }
-}
-
-realm {
-    syncEnabled = true
-}
 
 android {
     compileSdkVersion 30
@@ -53,6 +39,10 @@ dependencies {
     implementation lib.retrofit2
     implementation lib.retrofitComverterGson
     implementation lib.okhttp3LoggingInterceptor
+
+    // Room
+    implementation lib.room
+    kapt lib.room_compiler
 
     debugImplementation lib.chucker
     releaseImplementation lib.chuckerReleaseImplementation
