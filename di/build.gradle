@@ -32,4 +32,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':domain')
     implementation project(path: ':data')
+
+    def lib = rootProject.ext.generalDependencies
+    implementation lib.dagger
+    kapt lib.daggerCompiler
 }

@@ -7,6 +7,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
 private const val PRIVATE_API_KEY_ARG = "hash"
 private const val PRIVATE_API_KEY_ARG_VALUE = "b9baa830257d91dacc32db89d34d1f09"
@@ -18,7 +19,7 @@ private const val TS_VALUE = "1"
 private const val MAX_TRYOUTS = 3
 private const val INIT_TRYOUT = 1
 
-class MarvelRequestGenerator(context: Context) {
+class MarvelRequestGenerator @Inject constructor(context: Context) {
 
     private val httpClient = OkHttpClient.Builder()
             .addInterceptor(
@@ -68,4 +69,5 @@ class MarvelRequestGenerator(context: Context) {
         val retrofit = builder.client(httpClient.build()).build()
         return retrofit.create(serviceClass)
     }
+
 }

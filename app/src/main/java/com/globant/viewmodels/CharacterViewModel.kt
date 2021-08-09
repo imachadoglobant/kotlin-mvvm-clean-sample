@@ -13,8 +13,11 @@ import com.globant.utils.Status
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class CharacterViewModel(val getCharacterById: GetCharacterByIdUseCase) : ViewModel() {
+class CharacterViewModel @Inject constructor(
+    val getCharacterById: GetCharacterByIdUseCase
+) : ViewModel() {
 
     private var mutableMainState: MutableLiveData<Event<Data<MarvelCharacter>>> = MutableLiveData()
     val mainState: LiveData<Event<Data<MarvelCharacter>>>

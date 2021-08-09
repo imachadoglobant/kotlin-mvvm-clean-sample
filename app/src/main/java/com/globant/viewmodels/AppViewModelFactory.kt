@@ -1,26 +1,18 @@
 package com.globant.viewmodels
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
-import com.globant.data.database.CharacterDatabase
-import com.globant.data.repositories.MarvelCharacterRepositoryImpl
-import com.globant.data.service.CharacterService
-import com.globant.domain.usecases.GetCharacterByIdUseCase
+import androidx.lifecycle.ViewModelProvider
+import javax.inject.Inject
+import javax.inject.Provider
+import javax.inject.Singleton
 
-class AppViewModelFactory(private val context: Context) : NewInstanceFactory() {
+@Singleton
+class AppViewModelFactory @Inject constructor(
+        private val viewModels: MutableMap<Class<out ViewModel>, Provider<ViewModel>>
+) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return if (modelClass == CharacterViewModel::class.java) {
-            CharacterViewModel(GetCharacterByIdUseCase().apply {
-                marvelCharacterRepository = MarvelCharacterRepositoryImpl(
-                    CharacterService(context),
-                    CharacterDatabase.getInstance(context)
-                )
-            }) as T
-        } else {
-            super.create(modelClass)
-        }
-    }
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T =
+            viewModels[modelClass]?.get() as T
 
 }

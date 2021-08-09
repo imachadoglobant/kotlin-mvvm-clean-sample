@@ -31,10 +31,10 @@ import kotlinx.coroutines.withTimeout
 class LiveDataValueCapture<T> {
 
     private val _values = mutableListOf<T?>()
-    val values: List<T?>
+    private val values: List<T?>
         get() = _values
 
-    val channel = Channel<T?>(Channel.UNLIMITED)
+    private val channel = Channel<T?>(Channel.UNLIMITED)
 
     fun addValue(value: T?) {
         _values += value
@@ -64,7 +64,7 @@ class LiveDataValueCapture<T> {
  * Extension function to capture all values that are emitted to a LiveData<T> during the execution of
  * `captureBlock`.
  *
- * @param captureBlock a lambda that will
+ * @param block a lambda that will
  */
 inline fun <T> LiveData<T>.captureValues(block: LiveDataValueCapture<T>.() -> Unit) {
     val capture = LiveDataValueCapture<T>()
@@ -81,7 +81,7 @@ inline fun <T> LiveData<T>.captureValues(block: LiveDataValueCapture<T>.() -> Un
  */
 fun <T> LiveData<T>.getValueForTest(): T? {
     var value: T? = null
-    var observer = Observer<T> {
+    val observer = Observer<T> {
         value = it
     }
     observeForever(observer)

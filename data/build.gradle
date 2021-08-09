@@ -1,6 +1,8 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
 
 android {
     compileSdkVersion 30
@@ -43,6 +45,10 @@ dependencies {
     // Room
     implementation lib.room
     kapt lib.room_compiler
+
+    // Dagger
+    implementation lib.dagger
+    kapt lib.daggerCompiler
 
     debugImplementation lib.chucker
     releaseImplementation lib.chuckerReleaseImplementation

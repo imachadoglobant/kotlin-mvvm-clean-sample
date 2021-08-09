@@ -6,8 +6,9 @@ import com.globant.data.service.CharacterService
 import com.globant.domain.entities.MarvelCharacter
 import com.globant.domain.repositories.MarvelCharacterRepository
 import com.globant.domain.utils.Result
+import javax.inject.Inject
 
-class MarvelCharacterRepositoryImpl(
+class MarvelCharacterRepositoryImpl @Inject constructor(
     private val characterService: CharacterService,
     private val characterDatabase: CharacterDatabase
 ) : MarvelCharacterRepository {

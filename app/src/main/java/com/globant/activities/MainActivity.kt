@@ -3,22 +3,25 @@ package com.globant.activities
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.globant.domain.entities.MarvelCharacter
-import com.globant.utils.Data
-import com.globant.utils.Status
-import com.globant.viewmodels.CharacterViewModel
 import com.globant.myapplication.R
 import com.globant.myapplication.databinding.ActivityMainBinding
+import com.globant.utils.Data
 import com.globant.utils.Event
 import com.globant.utils.MINUS_ONE
-import com.globant.viewmodels.AppViewModelProvider
+import com.globant.utils.Status
+import com.globant.viewmodels.AppViewModelFactory
+import com.globant.viewmodels.CharacterViewModel
+import dagger.android.support.DaggerAppCompatActivity
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : DaggerAppCompatActivity() {
 
-    private val viewModel by lazy {
-        AppViewModelProvider(this).get(CharacterViewModel::class.java)
-    }
+    @Inject
+    lateinit var viewModelFactory: AppViewModelFactory
+
+    private lateinit var viewModel: CharacterViewModel
 
     private lateinit var binding: ActivityMainBinding
 
@@ -27,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        viewModel = ViewModelProvider(this, viewModelFactory).get(CharacterViewModel::class.java)
         viewModel.mainState.observe(::getLifecycle, ::updateUI)
 
         binding.buttonSearchRemote.setOnClickListener { onSearchRemoteClicked() }

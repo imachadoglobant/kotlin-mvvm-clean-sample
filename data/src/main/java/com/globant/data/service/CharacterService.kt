@@ -1,17 +1,17 @@
 package com.globant.data.service
 
-import android.content.Context
 import com.globant.data.MarvelRequestGenerator
 import com.globant.data.mapper.CharacterMapperService
 import com.globant.data.service.api.MarvelApi
 import com.globant.domain.entities.MarvelCharacter
 import com.globant.domain.utils.Result
 import java.io.IOException
+import javax.inject.Inject
 
-class CharacterService(context: Context) {
-
-    private val api: MarvelRequestGenerator = MarvelRequestGenerator(context)
-    private val mapper: CharacterMapperService = CharacterMapperService()
+class CharacterService @Inject constructor(
+        private val api: MarvelRequestGenerator,
+        private val mapper: CharacterMapperService
+) {
 
     fun getCharacterById(id: Int): Result<MarvelCharacter> {
         val callResponse = api.createService(MarvelApi::class.java).getCharacterById(id)

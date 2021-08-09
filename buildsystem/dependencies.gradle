@@ -18,6 +18,7 @@ ext{
     junit_version = "4.13"
     androidx_viewmodel = "2.2.0"
     room_version = "2.3.0"
+    dagger_version = "2.38.1"
 
 generalDependencies = [
         appcompat                       : "androidx.appcompat:appcompat:${appcompat}",
@@ -39,6 +40,10 @@ generalDependencies = [
         retrofitComverterGson           : "com.squareup.retrofit2:converter-gson:${retrofitComverterGson}",
         okhttp3LoggingInterceptor       : "com.squareup.okhttp3:logging-interceptor:${okhttp3LoggingInterceptor}",
         room                            : "androidx.room:room-runtime:${room_version}",
-        room_compiler                   : "androidx.room:room-compiler:${room_version}"
+        room_compiler                   : "androidx.room:room-compiler:${room_version}",
+        dagger                          : "com.google.dagger:dagger:${dagger_version}",
+        daggerCompiler                  : "com.google.dagger:dagger-compiler:${dagger_version}",
+        daggerSupport                   : "com.google.dagger:dagger-android-support:${dagger_version}",
+        daggerProcessor                 : "com.google.dagger:dagger-android-processor:${dagger_version}"
 ]
 }

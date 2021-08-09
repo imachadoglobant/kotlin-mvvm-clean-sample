@@ -1,6 +1,8 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
 
 android {
     compileSdkVersion 30
@@ -34,13 +36,23 @@ dependencies {
     implementation project(path: ':data')
 
     def lib = rootProject.ext.generalDependencies
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation lib.coroutinesAndroid
     implementation lib.coroutinesCore
     implementation lib.androidx_viewmodel
     implementation lib.appcompat
     implementation lib.coreKtx
     implementation lib.constraintlayout
+
+    // Room
+    implementation lib.room
+    kapt lib.room_compiler
+
+    // Dagger
+    implementation lib.dagger
+    kapt lib.daggerCompiler
+    implementation lib.daggerSupport
+    kapt lib.daggerProcessor
 
     testImplementation lib.junit_version
     androidTestImplementation lib.test_runner_version
