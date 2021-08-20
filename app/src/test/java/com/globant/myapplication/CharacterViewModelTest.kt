@@ -3,35 +3,47 @@ package com.globant.myapplication
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import com.globant.di.useCasesModule
 import com.globant.domain.entities.MarvelCharacter
 import com.globant.domain.usecases.GetCharacterByIdUseCase
 import com.globant.domain.utils.Result
-import com.globant.utils.Data
-import com.globant.utils.Status
+import com.globant.utils.Status.ERROR
+import com.globant.utils.Status.LOADING
+import com.globant.utils.Status.SUCCESSFUL
 import com.globant.viewmodels.CharacterViewModel
-import com.google.common.truth.Truth
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.koin.core.context.startKoin
-import org.koin.core.context.stopKoin
-import org.koin.test.AutoCloseKoinTest
-import org.koin.test.inject
-import org.koin.test.mock.declareMock
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import java.lang.Exception
-import org.mockito.Mockito.`when` as whenever
+import org.mockito.kotlin.whenever
 
-private const val VALID_ID = 1017100
-private const val INVALID_ID = -1
+class CharacterViewModelTest {
 
-class CharacterViewModelTest : AutoCloseKoinTest() {
+    companion object {
+        private const val VALID_ID = 1017100
+        private const val INVALID_ID = -1
+    }
+
+    class TestObserver<T> : Observer<T> {
+        val observedValues = mutableListOf<T?>()
+        override fun onChanged(value: T?) {
+            observedValues.add(value)
+        }
+    }
+
+    private fun <T> LiveData<T>.testObserver() = TestObserver<T>().also {
+        observeForever(it)
+    }
 
     @ObsoleteCoroutinesApi
     private var mainThreadSurrogate = newSingleThreadContext("UI thread")
@@ -39,25 +51,19 @@ class CharacterViewModelTest : AutoCloseKoinTest() {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    lateinit var subject: CharacterViewModel
+    private lateinit var subject: CharacterViewModel
     @Mock lateinit var marvelCharacterValidResult: Result.Success<MarvelCharacter>
     @Mock lateinit var marvelCharacterInvalidResult: Result.Failure
     @Mock lateinit var marvelCharacter: MarvelCharacter
     @Mock lateinit var exception: Exception
-
-    private val getCharacterByIdUseCase: GetCharacterByIdUseCase by inject()
+    @Mock lateinit var getCharacterByIdUseCase: GetCharacterByIdUseCase
 
     @ExperimentalCoroutinesApi
     @ObsoleteCoroutinesApi
     @Before
     fun setup() {
         Dispatchers.setMain(mainThreadSurrogate)
-        startKoin {
-            modules(listOf(useCasesModule))
-        }
-
-        declareMock<GetCharacterByIdUseCase>()
-        MockitoAnnotations.initMocks(this)
+        MockitoAnnotations.openMocks(this)
         subject = CharacterViewModel(getCharacterByIdUseCase)
     }
 
@@ -65,7 +71,6 @@ class CharacterViewModelTest : AutoCloseKoinTest() {
     @ObsoleteCoroutinesApi
     @After
     fun after() {
-        stopKoin()
         mainThreadSurrogate.close()
         Dispatchers.resetMain()
     }
@@ -78,9 +83,14 @@ class CharacterViewModelTest : AutoCloseKoinTest() {
         runBlocking {
             subject.onSearchRemoteClicked(VALID_ID).join()
         }
-        Truth.assertThat(liveDataUnderTest.observedValues)
-            .isEqualTo(listOf(Data(Status.LOADING), Data(Status.SUCCESSFUL, data = marvelCharacter)))
-
+        liveDataUnderTest.observedValues.run {
+            assertEquals(LOADING, first()?.peekContent()?.responseType)
+            assertNotNull(last()?.peekContent())
+            last()?.peekContent()?.run {
+                assertEquals(SUCCESSFUL, responseType)
+                assertEquals(marvelCharacter, data)
+            }
+        }
     }
 
     @Test
@@ -93,8 +103,14 @@ class CharacterViewModelTest : AutoCloseKoinTest() {
             subject.onSearchRemoteClicked(INVALID_ID).join()
         }
 
-        Truth.assertThat(liveDataUnderTest.observedValues)
-            .isEqualTo(listOf(Data(Status.LOADING), Data(Status.ERROR, data = null, error = exception)))
+        liveDataUnderTest.observedValues.run {
+            assertEquals(LOADING, first()?.peekContent()?.responseType)
+            assertNotNull(last()?.peekContent())
+            last()?.peekContent()?.run {
+                assertEquals(ERROR, responseType)
+                assertEquals(exception, error)
+            }
+        }
     }
 
     @Test
@@ -107,8 +123,14 @@ class CharacterViewModelTest : AutoCloseKoinTest() {
             subject.onSearchLocalClicked(VALID_ID).join()
         }
 
-        Truth.assertThat(liveDataUnderTest.observedValues)
-                .isEqualTo(listOf(Data(Status.LOADING), Data(Status.SUCCESSFUL, data = marvelCharacter)))
+        liveDataUnderTest.observedValues.run {
+            assertEquals(LOADING, first()?.peekContent()?.responseType)
+            assertNotNull(last()?.peekContent())
+            last()?.peekContent()?.run {
+                assertEquals(SUCCESSFUL, responseType)
+                assertEquals(marvelCharacter, data)
+            }
+        }
     }
 
     @Test
@@ -121,19 +143,14 @@ class CharacterViewModelTest : AutoCloseKoinTest() {
             subject.onSearchRemoteClicked(INVALID_ID).join()
         }
 
-        Truth.assertThat(liveDataUnderTest.observedValues)
-                .isEqualTo(listOf(Data(Status.LOADING), Data(Status.ERROR, data = null, error = exception)))
-    }
-
-    class TestObserver<T> : Observer<T> {
-        val observedValues = mutableListOf<T?>()
-        override fun onChanged(value: T?) {
-            observedValues.add(value)
+        liveDataUnderTest.observedValues.run {
+            assertEquals(LOADING, first()?.peekContent()?.responseType)
+            assertNotNull(last()?.peekContent())
+            last()?.peekContent()?.run {
+                assertEquals(ERROR, responseType)
+                assertEquals(exception, error)
+            }
         }
-    }
-
-    private fun <T> LiveData<T>.testObserver() = TestObserver<T>().also {
-        observeForever(it)
     }
 
 }

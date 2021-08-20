@@ -47,7 +47,7 @@ dependencies {
     androidTestImplementation lib.espresso_core_version
 
     testImplementation lib.google_truth_version
-    testImplementation lib.mockito_core_version
+    testImplementation lib.mockito_version
 
     testImplementation lib.coreTest
     testImplementation lib.coroutinesCore

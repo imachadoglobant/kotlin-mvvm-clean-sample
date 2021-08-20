@@ -14,7 +14,7 @@ ext{
     espresso_core_version = "3.1.1"
     google_truth_version = "0.42"
     test_runner_version = "1.2.0"
-    mockito_core_version = "2.28.2"
+    mockito_version = "3.2.0"
     junit_version = "4.13"
     androidx_viewmodel = "2.2.0"
     room_version = "2.3.0"
@@ -32,7 +32,7 @@ generalDependencies = [
         google_truth_version            : "com.google.truth:truth:${google_truth_version}",
         junit_version                   : "junit:junit:${junit_version}",
         test_runner_version             : "androidx.test:runner:${test_runner_version}",
-        mockito_core_version            : "org.mockito:mockito-core:${mockito_core_version}",
+        mockito_version            : "org.mockito.kotlin:mockito-kotlin:${mockito_version}",
         chucker                         : "com.github.ChuckerTeam.Chucker:library:${chuckerVersion}",
         chuckerReleaseImplementation    : "com.github.ChuckerTeam.Chucker:library-no-op:${chuckerVersion}",
         retrofit2                       : "com.squareup.retrofit2:retrofit:${retrofit2}",
