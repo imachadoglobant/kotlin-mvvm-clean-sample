@@ -10,7 +10,7 @@ import com.globant.domain.usecases.GetCharacterByIdUseCase
 
 class AppViewModelFactory(private val context: Context) : NewInstanceFactory() {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass == CharacterViewModel::class.java) {
             CharacterViewModel(GetCharacterByIdUseCase().apply {
                 marvelCharacterRepository = MarvelCharacterRepositoryImpl(

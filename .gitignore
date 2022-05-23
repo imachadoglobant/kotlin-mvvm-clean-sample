@@ -1,8 +1,6 @@
 /captures
 .externalNativeBuild
 
-gradle.properties
-
 # Built application files
 *.apk
 *.ap_
