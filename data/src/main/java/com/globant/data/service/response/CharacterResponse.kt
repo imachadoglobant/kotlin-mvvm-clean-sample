@@ -1,7 +1,13 @@
 package com.globant.data.service.response
 
-class CharacterResponse (
-        val id: Int,
-        val name: String,
-        val description: String
+class CharacterResponse(
+    val id: Int,
+    val name: String,
+    val description: String,
+    val thumbnail: ThumbnailResponse
+)
+
+class ThumbnailResponse(
+    val path: String = "",
+    val extension: String = ""
 )

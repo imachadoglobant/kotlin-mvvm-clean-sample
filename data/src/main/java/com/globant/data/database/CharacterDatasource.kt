@@ -7,17 +7,17 @@ import com.globant.domain.utils.Result
 
 class CharacterDatasource(context: Context) {
 
-    private val characterDatabase = CharacterDatabase.getInstance(context)
+    private val marvelDatabase = MarvelDatabase.getInstance(context)
     private val mapper = CharacterMapperLocal()
 
     fun findById(id: Int): Result<MarvelCharacter> {
-        return characterDatabase.characterDao().findById(id)?.let {
+        return marvelDatabase.characterDao().findById(id)?.let {
             return Result.Success(mapper.transform(it))
         } ?: Result.Failure(Exception("Character not found"))
     }
 
     fun insert(character: MarvelCharacter) {
-        characterDatabase.characterDao().insert(mapper.transformToRepository(character))
+        marvelDatabase.characterDao().insert(mapper.transformToRepository(character))
     }
 
 }
